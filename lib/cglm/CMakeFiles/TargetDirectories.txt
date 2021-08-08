@@ -1,0 +1,9 @@
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/install/strip.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/install/local.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/edit_cache.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/package_source.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/install.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/list_install_components.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/rebuild_cache.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/package.dir
+/home/tapo4eg3d/Projects/CMinecraft/lib/cglm/CMakeFiles/cglm.dir
