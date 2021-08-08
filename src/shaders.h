@@ -9,7 +9,7 @@ struct Shader {
    * I decided to combine both Vertex and Fragment shaders in a single Struct
    */
   GLuint shader_program_id;
-  GLuint vector_shader_id;
+  GLuint vertex_shader_id;
   GLuint fragment_shader_id;
 };
 

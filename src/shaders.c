@@ -1,17 +1,23 @@
+#include <stdio.h>
+
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <assert.h>
 
 #include "shaders.h"
 
 static void _log_and_fail(
   GLint handle, const char *adverb, const char *path,
-  void (*getLog)(GLuint, GLsizei, GLsizei*, GLchar*),
+  void (*getlog)(GLuint, GLsizei, GLsizei*, GLchar*),
   void (*getiv)(GLuint, GLenum, GLint*)) {
 
   GLint log_len;
   getiv(handle, GL_INFO_LOG_LENGTH, &log_len);
 
   char *log_text = malloc(log_len);
-  getlog(handle, log_len, NULL, logtext);
+  getlog(handle, log_len, NULL, log_text);
   
   fprintf(stderr, "Error %s shader at '%s': \n %s", adverb, path, log_text);
 
@@ -25,8 +31,8 @@ static GLuint _compile(char *path, GLenum type) {
 
   long len;
 
-  fp = open(path, "rb");
-  if (f == NULL) {
+  fp = fopen(path, "rb");
+  if (fp == NULL) {
     fprintf(stderr, "Error loading shader at: \"%s\" \n", path);
 
     exit(1);
@@ -48,7 +54,7 @@ static GLuint _compile(char *path, GLenum type) {
   fclose(fp);
 
   GLuint handle = glCreateShader(type);
-  glShaderSource(handle, 1, &source, &len);
+  glShaderSource(handle, 1, (const GLchar *const *) &source, (const GLint *) &len);
   glCompileShader(handle);
 
   free(source);
@@ -57,7 +63,7 @@ static GLuint _compile(char *path, GLenum type) {
   glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
 
   if (!success)
-    _log_and_fail(handle, "compiling", path, glGetSahderInfoLog, glGetShaderiv);
+    _log_and_fail(handle, "compiling", path, glGetShaderInfoLog, glGetShaderiv);
 
   return handle;
 }
@@ -65,7 +71,7 @@ static GLuint _compile(char *path, GLenum type) {
 struct Shader shader_create(char *vs_path, char *fs_path, size_t n) {
   struct Shader self;
 
-  self.vector_shader_id = _compile(vs_path, GL_VERTEX_SHADER);
+  self.vertex_shader_id = _compile(vs_path, GL_VERTEX_SHADER);
   self.fragment_shader_id = _compile(fs_path, GL_FRAGMENT_SHADER);
 
   self.shader_program_id = glCreateProgram();
@@ -83,17 +89,17 @@ struct Shader shader_create(char *vs_path, char *fs_path, size_t n) {
 
   // Check link status
   GLint success;
-  glGetprogramiv(self.shader_program_id, GL_LINK_STATUS, &success);
+  glGetProgramiv(self.shader_program_id, GL_LINK_STATUS, &success);
 
-  if (!successed) {
+  if (!success) {
     char buff[512];
     snprintf(buff, 512, "[%s, %s]", vs_path, fs_path);
 
-    _log_and_fail(self.shader_program_id, "linking", glGetProgramInfoLog, glGetProgramiv);
+    _log_and_fail(self.shader_program_id, "linking", buff, glGetProgramInfoLog, glGetProgramiv);
   }
 
   return self;
-};
+}
 
 void shader_use(struct Shader self) {
   glUseProgram(self.shader_program_id);
@@ -111,8 +117,8 @@ void shader_destroy(struct Shader self) {
 
 void shader_set_int(struct Shader self, char *name, int value) {
   glUniform1i(glGetUniformLocation(self.shader_program_id, name), value);
-};
+}
 
 void sahder_set_float(struct Shader self, char *name, float value) {
   glUniform1f(glGetUniformLocation(self.shader_program_id, name), value);
-};
+}
