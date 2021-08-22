@@ -1,11 +1,3 @@
-#include <stdio.h>
-
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <assert.h>
-
 #include "shaders.h"
 
 static void _log_and_fail(
@@ -44,6 +36,8 @@ static GLuint _compile(char *path, GLenum type) {
   if (len == 0) {
     fprintf(stderr, "The shader file \"%s\" is empty!", path);
   }
+
+  fseek(fp, 0, SEEK_SET);
 
   source = malloc(len);
   assert(source != NULL);
@@ -119,6 +113,14 @@ void shader_set_int(struct Shader self, char *name, int value) {
   glUniform1i(glGetUniformLocation(self.shader_program_id, name), value);
 }
 
-void sahder_set_float(struct Shader self, char *name, float value) {
+void shader_set_float(struct Shader self, char *name, float value) {
   glUniform1f(glGetUniformLocation(self.shader_program_id, name), value);
+}
+
+void shader_set_mat4(struct Shader self, char *name, mat4 value) {
+  glUniformMatrix4fv(glGetUniformLocation(self.shader_program_id, name), 1, GL_FALSE, (float *)value);
+}
+
+void shader_set_vec4(struct Shader self, char *name, float x, float y, float z, float w) {
+  glUniform4f(glGetUniformLocation(self.shader_program_id, name), x, y, z, w);
 }

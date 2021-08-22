@@ -26,6 +26,9 @@ void shader_destroy(struct Shader self);
 
 // Bunch of functions to set shader's uniform based on type value
 void shader_set_int(struct Shader self, char *name, int value);
-void sahder_set_float(struct Shader self, char *name, float value);
+void shader_set_float(struct Shader self, char *name, float value);
+void shader_set_mat4(struct Shader self, char *name, mat4 value);
+
+void shader_set_vec4(struct Shader self, char *name, float x, float y, float z, float w);
 
 #endif
