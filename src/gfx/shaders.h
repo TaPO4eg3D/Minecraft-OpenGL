@@ -1,7 +1,7 @@
 #ifndef SHADERS_H
 #define SHADERS_H
 
-#include "glfx.h"
+#include "gfx.h"
 
 struct Shader {
   /**

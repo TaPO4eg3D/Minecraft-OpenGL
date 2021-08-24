@@ -1,0 +1,15 @@
+clang
+%c -std=c11
+-Ilib/cglm/include
+-Ilib/glad/include
+-Ilib/glfw/include
+-Ilib/stb
+-Ilib/noise
+-fbracket-depth=1024
+-ldl
+-lpthread
+-llib/glad/src/glad.o
+-llib/cglm/libcglm.a
+-llib/glfw/src/libglfw3.a
+-llib/noise/libnoise.a
+-lm
