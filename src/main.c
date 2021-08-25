@@ -1,6 +1,7 @@
 #include "gfx/window.h"
 #include "gfx/camera.h"
 #include "gfx/shaders.h"
+#include "gfx/texture.h"
 
 #include "block/block.h"
 
@@ -8,6 +9,7 @@
 struct State {
   struct Camera camera;
   struct Shader shader;
+  struct Texture atlas;
 };
 
 struct Block block;
@@ -22,12 +24,17 @@ void init() {
   );
   shader_use(game_state.shader);
 
+  game_state.atlas = load_from_path("res/img/atlas.png");
+
   /* game_state.camera = camera_default_init(); */
-  block = block_create((vec3){0.0f, 0.0f, 0.0f});
+  block = block_create((vec3){0.0f, 0.0f, 0.0f}, 1.0f, 0.0f);
 }
 
 void render() {
   shader_use(game_state.shader);
+
+  set_active_texture(0);
+  bind_texture(&game_state.atlas);
 
   /* camera_update(game_state.camera); */
   mat4 view = GLM_MAT4_IDENTITY_INIT;

@@ -1,51 +1,62 @@
 #include "block.h"
 
-
-struct Block block_create(vec3 position) {
+struct Block block_create(vec3 position, float xslot, float yslot) {
   struct Block self;
 
+  float xoffset = xslot * SPRITE_SIZE;
+  float yoffset = TEXTURE_SIZE - (yslot * SPRITE_SIZE);
+
+  float ax = xoffset / TEXTURE_SIZE;
+  float ay = (yoffset - SPRITE_SIZE) / TEXTURE_SIZE;
+
+  float bx = (xoffset + SPRITE_SIZE) / TEXTURE_SIZE;
+  float by = (yoffset - SPRITE_SIZE) / TEXTURE_SIZE;
+
+  float cx = (xoffset + SPRITE_SIZE) / TEXTURE_SIZE;
+  float cy = yoffset / TEXTURE_SIZE;
+
   float vertices[] = {
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f, ax, ay,
+         0.5f, -0.5f, -0.5f, bx, by,
+         0.5f,  0.5f, -0.5f, cx, cy,
+         0.5f,  0.5f, -0.5f, cx, cy,
+        -0.5f,  0.5f, -0.5f, ax, cy,
+        -0.5f, -0.5f, -0.5f, ax, ay,
 
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f, ax, ay,
+         0.5f, -0.5f,  0.5f, bx, by,
+         0.5f,  0.5f,  0.5f, cx, cy,
+         0.5f,  0.5f,  0.5f, cx, cy,
+        -0.5f,  0.5f,  0.5f, ax, cy,
+        -0.5f, -0.5f,  0.5f, ax, ay,
 
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f, ax, ay,
+        -0.5f,  0.5f, -0.5f, bx, by,
+        -0.5f, -0.5f, -0.5f, cx, cy,
+        -0.5f, -0.5f, -0.5f, cx, cy,
+        -0.5f, -0.5f,  0.5f, ax, cy,
+        -0.5f,  0.5f,  0.5f, ax, ay,
 
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f, ax, ay,
+         0.5f,  0.5f, -0.5f, bx, by,
+         0.5f, -0.5f, -0.5f, cx, cy,
+         0.5f, -0.5f, -0.5f, cx, cy,
+         0.5f, -0.5f,  0.5f, ax, cy,
+         0.5f,  0.5f,  0.5f, ax, ay,
 
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f, ax, ay,
+         0.5f, -0.5f, -0.5f, bx, by,
+         0.5f, -0.5f,  0.5f, cx, cy,
+         0.5f, -0.5f,  0.5f, cx, cy,
+        -0.5f, -0.5f,  0.5f, ax, cy,
+        -0.5f, -0.5f, -0.5f, ax, ay,
 
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f
+        -0.5f,  0.5f, -0.5f, ax, ay,
+         0.5f,  0.5f, -0.5f, bx, by,
+         0.5f,  0.5f,  0.5f, cx, cy,
+         0.5f,  0.5f,  0.5f, cx, cy,
+        -0.5f,  0.5f,  0.5f, ax, cy,
+        -0.5f,  0.5f, -0.5f, ax, ay
   };
   glm_vec3_copy(position, self.position);
 
@@ -60,8 +71,12 @@ struct Block block_create(vec3 position) {
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   // position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+
+  // texture attribute
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
