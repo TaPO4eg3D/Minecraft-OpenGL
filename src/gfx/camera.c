@@ -34,8 +34,8 @@ struct Camera camera_default_init() {
 }
 
 void camera_update(struct Camera *self) {
-  self->yaw += (window.mouse_xoffset * self->sensitivity);
-  self->pitch += (window.mouse_yoffset * self->sensitivity);
+  self->yaw += (window.mouse_xoffset * self->sensitivity * window.delta_time);
+  self->pitch += (window.mouse_yoffset * self->sensitivity * window.delta_time);
 
   // TODO: Fix this hack
   window.mouse_xoffset = 0.0f;
@@ -50,6 +50,38 @@ void camera_update(struct Camera *self) {
   };
 
   glm_vec3_normalize_to(front, self->front);
+  vec3 scaled_axis_vec;
+
+  if (window.up) {
+    glm_vec3_scale_as(self->up, self->movement_speed * window.delta_time, scaled_axis_vec);
+    glm_vec3_add(self->position, scaled_axis_vec, self->position);
+  }
+
+  if (window.down) {
+    glm_vec3_scale_as(self->up, self->movement_speed * window.delta_time, scaled_axis_vec);
+    glm_vec3_sub(self->position, scaled_axis_vec, self->position);
+  }
+
+  if (window.forward) {
+    glm_vec3_scale_as(front, self->movement_speed * window.delta_time, scaled_axis_vec);
+    glm_vec3_add(self->position, scaled_axis_vec, self->position);
+  }
+
+  if (window.backward) {
+    glm_vec3_scale_as(front, self->movement_speed * window.delta_time, scaled_axis_vec);
+    glm_vec3_sub(self->position, scaled_axis_vec, self->position);
+  }
+
+  if (window.left) {
+    glm_vec3_scale_as(self->right, self->movement_speed * window.delta_time, scaled_axis_vec);
+    glm_vec3_sub(self->position, scaled_axis_vec, self->position);
+  }
+
+  if (window.right) {
+    glm_vec3_scale_as(self->right, self->movement_speed * window.delta_time, scaled_axis_vec);
+    glm_vec3_add(self->position, scaled_axis_vec, self->position);
+  }
+
   glm_vec3_crossn(self->front, self->world_up, self->right);
   glm_vec3_crossn(self->right, self->front, self->up);
 

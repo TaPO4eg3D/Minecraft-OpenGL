@@ -3,6 +3,17 @@
 struct Window window;
 static bool _hasMouseCoordinates = false;
 
+static void _process_input(GLFWwindow *handle) {
+  window.up = glfwGetKey(handle, GLFW_KEY_SPACE) == GLFW_PRESS;
+  window.down = glfwGetKey(handle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS
+      || glfwGetKey(handle, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
+
+  window.forward = glfwGetKey(handle, GLFW_KEY_W) == GLFW_PRESS;
+  window.backward = glfwGetKey(handle, GLFW_KEY_S) == GLFW_PRESS;
+  window.left = glfwGetKey(handle, GLFW_KEY_A) == GLFW_PRESS;
+  window.right = glfwGetKey(handle, GLFW_KEY_D) == GLFW_PRESS;
+}
+
 static void _framebuffer_size_callback(GLFWwindow *handle, int width, int height) {
   window.width = width;
   window.height = height;
@@ -38,6 +49,8 @@ void window_init(WindowFunc init, WindowFunc render, WindowFunc destroy){
   window.init = init;
   window.render = render;
   window.destroy = destroy; 
+
+  window.last_frame = 0.0f;
 
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -79,6 +92,11 @@ void window_loop() {
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+      float current_frame = glfwGetTime();
+      window.delta_time = current_frame - window.last_frame;
+      window.last_frame = current_frame;
+
+      _process_input(window.handle);
       window.render();
 
       glfwSwapBuffers(window.handle);

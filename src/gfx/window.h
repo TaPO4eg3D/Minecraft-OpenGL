@@ -11,7 +11,10 @@ struct Window {
   int width, height;
   WindowFunc init, destroy, render;
 
-  float deltaTime;
+  float delta_time;
+  float last_frame;
+
+  bool forward, backward, up, down, left, right;
 
   float mouse_lastx, mouse_lasty;
   float mouse_xoffset, mouse_yoffset;
