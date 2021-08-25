@@ -26,8 +26,8 @@ void init() {
 
   game_state.atlas = load_from_path("res/img/atlas.png");
 
-  /* game_state.camera = camera_default_init(); */
-  block = block_create((vec3){0.0f, 0.0f, 0.0f}, 1.0f, 0.0f);
+  game_state.camera = camera_default_init();
+  block = block_create((vec3){0.0f, 0.0f, 0.0f}, 2.0f, 3.0f);
 }
 
 void render() {
@@ -36,11 +36,8 @@ void render() {
   set_active_texture(0);
   bind_texture(&game_state.atlas);
 
-  /* camera_update(game_state.camera); */
-  mat4 view = GLM_MAT4_IDENTITY_INIT;
-  glm_translate(view, (vec3){0.0f, 0.0f, -3.0f});
-
-  shader_set_mat4(game_state.shader, "view", view);
+  camera_update(&game_state.camera);
+  shader_set_mat4(game_state.shader, "view", game_state.camera.view);
 
   mat4 projection;
   glm_perspective(

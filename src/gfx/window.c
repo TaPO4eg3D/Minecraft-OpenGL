@@ -1,7 +1,6 @@
 #include "window.h"
 
 struct Window window;
-
 static bool _hasMouseCoordinates = false;
 
 static void _framebuffer_size_callback(GLFWwindow *handle, int width, int height) {
@@ -19,11 +18,11 @@ static void _mouse_callback(GLFWwindow *handle, double xpos, double ypos) {
     _hasMouseCoordinates = true;
   }
 
-  window.mouse_xoffset = xpos - window.mouse_xoffset;
-  window.mouse_yoffset = window.mouse_yoffset - ypos; // reversed since y-coordinates go from bottom to top
+  window.mouse_xoffset = xpos - window.mouse_lastx;
+  window.mouse_yoffset = window.mouse_lasty - ypos; // reversed since y-coordinates go from bottom to top
 
   window.mouse_lastx = xpos;
-  window.mouse_lasty = xpos;
+  window.mouse_lasty = ypos;
 }
 
 static void _destroy() {
@@ -65,7 +64,7 @@ void window_init(WindowFunc init, WindowFunc render, WindowFunc destroy){
 
   glViewport(0, 0, 800, 600);
   glfwSetFramebufferSizeCallback(window.handle, _framebuffer_size_callback);
-
+  glfwSetCursorPosCallback(window.handle, _mouse_callback);
 }
 
 void window_loop() {
@@ -74,7 +73,7 @@ void window_loop() {
   // OpenGL Depth test
   glEnable(GL_DEPTH_TEST);
   // Capture Mouse
-  /* glfwSetInputMode(window.handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED); */
+  glfwSetInputMode(window.handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   while(!glfwWindowShouldClose(window.handle)) {
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

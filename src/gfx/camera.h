@@ -11,7 +11,7 @@
 #define DEFAULT_CAMERA_SPEED 10.0f
 #define DEFAULT_CAMERA_SENSITIVITY 0.1f
 #define DEFAULT_CAMERA_POSITION ((vec3){ 0.0f, 0.0f, 3.0f })
-#define DEFAULT_CAMERA_FRONT ((vec3){ 0.0f, 0.0f, 1.0f })
+#define DEFAULT_CAMERA_FRONT ((vec3){ 0.0f, 0.0f, -1.0f })
 
 struct Camera {
   float fov;
@@ -31,6 +31,6 @@ struct Camera camera_init(float fov, float near_plane, float far_plane, float se
 // Just a wrapper around "camera_init" with default values
 struct Camera camera_default_init();
 
-void camera_update(struct Camera self);
+void camera_update(struct Camera *self);
 
 #endif

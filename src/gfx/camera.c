@@ -33,23 +33,27 @@ struct Camera camera_default_init() {
   );
 }
 
-void camera_update(struct Camera self) {
-  self.yaw += (window.mouse_xoffset * self.sensitivity);
-  self.pitch += (window.mouse_yoffset * self.sensitivity);
+void camera_update(struct Camera *self) {
+  self->yaw += (window.mouse_xoffset * self->sensitivity);
+  self->pitch += (window.mouse_yoffset * self->sensitivity);
 
-  self.pitch = glm_clamp(self.pitch, 89.0f, -89.0f);
+  // TODO: Fix this hack
+  window.mouse_xoffset = 0.0f;
+  window.mouse_yoffset = 0.0f;
+
+  self->pitch = glm_clamp(self->pitch, -89.0f, 89.0f);
 
   vec3 front = {
-    cos(glm_rad(self.yaw) * cos(glm_rad(self.pitch))),
-    sin(glm_rad(self.pitch)),
-    sin(glm_rad(self.yaw) * cos(glm_rad(self.pitch)))
+    cos(glm_rad(self->yaw)) * cos(glm_rad(self->pitch)),
+    sin(glm_rad(self->pitch)),
+    sin(glm_rad(self->yaw)) * cos(glm_rad(self->pitch))
   };
 
-  glm_vec3_normalize_to(front, self.front);
-  glm_vec3_crossn(self.front, self.world_up, self.right);
-  glm_vec3_crossn(self.right, self.front, self.up);
+  glm_vec3_normalize_to(front, self->front);
+  glm_vec3_crossn(self->front, self->world_up, self->right);
+  glm_vec3_crossn(self->right, self->front, self->up);
 
   vec3 position_add_front;
-  glm_vec3_add(self.position, self.front, position_add_front);
-  glm_lookat(self.position, position_add_front, self.up, self.view);
+  glm_vec3_add(self->position, self->front, position_add_front);
+  glm_lookat(self->position, position_add_front, self->up, self->view);
 }

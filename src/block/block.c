@@ -93,7 +93,6 @@ void block_render(struct Block self, struct Shader shader) {
 
   mat4 model = GLM_MAT4_IDENTITY_INIT;
   glm_translate(model, (vec3){0.0f, 0.0f, 0.0f});
-  glm_rotate(model, glm_rad(40.0f), (vec3){1.0f, 0.3f, 0.5f});
 
   shader_set_mat4(shader, "model", model);
 
